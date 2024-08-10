@@ -1,0 +1,25 @@
+
+@component('blog/base',{title:"blog"})
+
+@slot("main")
+    
+    <main>
+
+        <section>
+            @each(post in posts)
+                <div>
+                    
+                    @let({id,slug,title}=post)
+
+                    <h2>{{title}}</h2>
+
+                    <a href="{{ route('blog.show',{slug,id}) }}">show</a>
+                    
+                </div>
+            @end
+        </section>
+    </main>
+
+@end
+
+@end
