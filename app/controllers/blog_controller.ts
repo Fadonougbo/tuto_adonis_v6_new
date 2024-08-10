@@ -1,8 +1,8 @@
 import type { HttpContext } from "@adonisjs/core/http";
-
 import Post from "#models/post";
 
 export default class BlogController {
+
 
 
 	async index({ view }: HttpContext) {
