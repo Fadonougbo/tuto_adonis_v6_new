@@ -1,9 +1,21 @@
 
-@component('blog/base',{title:post.title})
+@component('blog/base')
+
+    @slot('title')
+        <title>{{post.title}}</title>
+    @end
 
     @slot("main")
         
         <main>
+
+            @flashMessage('success')
+                <h1>
+                    <em>
+                        {{$message}}
+                    </em>
+                </h1>
+            @end
 
             @let({id,slug,title,content}=post)   
 
@@ -11,7 +23,8 @@
 
             <p>{{content}}</p>
 
-            <a href="{{route('blog.index')}}">Home</a>                        
+            <a href="{{route('blog.index')}}">Home</a>
+                                    
         </main>
 
     @end

@@ -1,25 +1,33 @@
 
-@component('blog/base',{title:"blog"})
+@component('blog/base')
 
-@slot("main")
-    
-    <main>
+    @slot('title')
+        <title>blog</title>
+    @end
 
-        <section>
-            @each(post in posts)
-                <div>
-                    
-                    @let({id,slug,title}=post)
+    @slot("main")
+        
+        <main>
+            <h1>
+                <mark>
+                    <a href="{{route('blog.create')}}">Creer un post</a>
+                </mark>
+            </h1>
+            <section>
+                @each(post in posts)
+                    <div>
+                        
+                        @let({id,slug,title}=post)
 
-                    <h2>{{title}}</h2>
+                        <h2>{{title}}</h2>
 
-                    <a href="{{ route('blog.show',{slug,id}) }}">show</a>
-                    
-                </div>
-            @end
-        </section>
-    </main>
+                        <a href="{{ route('blog.show',{slug,id}) }}">show</a>
+                        
+                    </div>
+                @end
+            </section>
+        </main>
 
-@end
+    @end
 
 @end

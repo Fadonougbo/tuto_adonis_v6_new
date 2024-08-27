@@ -1,0 +1,50 @@
+
+@component('blog/base')
+
+    @slot('title')
+        <title>Creer un nouveau formulaire</title>
+    @end
+
+    @slot("main")
+        
+        <main>
+
+            <form action="" method="POST" >
+
+                {{ csrfField() }} 
+
+                <section>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" value="{{old('title') || 'title' }}" >
+
+                    @inputError('title') 
+                        <span>{{$messages}}</span>
+                    @end
+                </section>
+
+                <section>
+                    <label for="slug">Slug</label>
+                    <input type="text" name="slug" id="slug" value="{{old('slug') || 'slug' }}">
+                    @inputError('slug') 
+                        <span>{{$messages}}</span>
+                    @end
+                </section>
+
+                <section>
+                    <label for="content">Content</label>
+                    <textarea name="content" id="content">{{old('content') || 'content' }}</textarea>
+                    @inputError('content') 
+                        <span>{{$messages}}</span>
+                    @end
+                </section>
+
+                <section>
+                    <button>ajouter le poste</button>
+                </section>
+            </form>
+
+        </main>
+
+    @end
+
+@end
