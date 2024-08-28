@@ -11,15 +11,30 @@
             <h1>
                 <mark>
                     <a href="{{route('blog.create')}}">Creer un post</a>
+                    
                 </mark>
             </h1>
+            
+            @flashMessage('success') 
+            <h1>
+                <em>{{$message}}</em>
+            </h1>
+            @end
+            
             <section>
                 @each(post in posts)
                     <div>
                         
                         @let({id,slug,title}=post)
 
-                        <h2>{{title}}</h2>
+                        <h2>{{title}} <a href="{{route('blog.edit',{id})}}">EDITE</a> 
+
+                            <form action="{{route('blog.delete',{id})}}" method="POST">
+                                {{csrfField()}}
+                                <button type="submit" >DELETE</button>
+                            </form>
+                            
+                        </h2>
 
                         <a href="{{ route('blog.show',{slug,id}) }}">show</a>
                         

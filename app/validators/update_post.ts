@@ -1,14 +1,19 @@
 import vine from '@vinejs/vine'
-import Post from '#models/post'
 
-export const createPostValidator = vine.compile(
+export const updatePostValidator = vine.compile(
     vine.object({
+
       title: vine.string().trim().minLength(2),
+
       slug:vine.string().trim().minLength(2).unique(async (db,value,field)=> {
-        
-       return await Post.findBy({slug:value})?false:true
+
+        const res=await db.from('posts').where('slug',value).andWhereNot('id',field.meta.id);
+
+        return  res.length===0?true:false
        
       }),
+
       content:vine.string().minLength(2)
+      
     }).bail(true)
 )

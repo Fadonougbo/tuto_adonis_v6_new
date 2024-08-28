@@ -2,20 +2,34 @@
 @component('blog/base')
 
     @slot('title')
-        <title>Creer un nouveau formulaire</title>
+        <title>
+            @if(post) 
+                Modifier un post
+            @else
+                Creer un nouveau formulaire
+            @end
+        </title>
     @end
 
     @slot("main")
         
         <main>
+            <a href="{{route('blog.index')}}">Home</a>
+
+            <br>
 
             <form action="" method="POST" >
 
                 {{ csrfField() }} 
 
+                @let( {title,slug,id,content}=post)
+
                 <section>
                     <label for="title">Title</label>
-                    <input type="text" name="title" id="title" value="{{old('title') || 'title' }}" >
+
+                    <input type="text" name="title" id="title" value="{{old('title') || title||'title' }}" >
+
+
 
                     @inputError('title') 
                         <span>{{$messages}}</span>
@@ -24,7 +38,9 @@
 
                 <section>
                     <label for="slug">Slug</label>
-                    <input type="text" name="slug" id="slug" value="{{old('slug') || 'slug' }}">
+
+                    <input type="text" name="slug" id="slug" value="{{old('slug') || slug||'slug' }}">
+
                     @inputError('slug') 
                         <span>{{$messages}}</span>
                     @end
@@ -32,14 +48,18 @@
 
                 <section>
                     <label for="content">Content</label>
-                    <textarea name="content" id="content">{{old('content') || 'content' }}</textarea>
+
+                    <textarea name="content" id="content">{{old('content')||content || 'content' }}</textarea>
+
                     @inputError('content') 
                         <span>{{$messages}}</span>
                     @end
                 </section>
 
                 <section>
-                    <button>ajouter le poste</button>
+                    <button type="submit" >
+                        submit
+                    </button>
                 </section>
             </form>
 

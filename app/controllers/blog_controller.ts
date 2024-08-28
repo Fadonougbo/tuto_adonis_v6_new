@@ -2,14 +2,13 @@ import stringHelpers from "@adonisjs/core/helpers/string";
 import type { HttpContext } from "@adonisjs/core/http";
 import Post from "#models/post";
 import { createPostValidator } from "#validators/create_post";
+import { updatePostValidator } from "#validators/update_post";
 
 export default class BlogController {
 
 	async index({ view }: HttpContext) {
 
-		
-
-		const posts = await Post.query().paginate(1, 15);
+		const posts = await Post.query().paginate(1, 30);
 
 		return view.render("blog/blog", { posts });
 	}
@@ -32,20 +31,15 @@ export default class BlogController {
 	 * @param param0 http_context
 	 * @returns 
 	 */
-	async create({view,session}:HttpContext) {
+	async create({view}:HttpContext) {
 
-		return view.render('blog/create');
+		const post=new Post()
+		return view.render('blog/create',{post});
 	}
 
 	async store({request,response,session}:HttpContext) {
 
-		const {title,content,slug}=await request.validateUsing(createPostValidator,
-			{
-				meta: {
-					slug:request.input('slug')
-				}
-			}
-		)
+		const {title,content,slug}=await request.validateUsing(createPostValidator)
 
 		const {slug:post_slug,id}=await Post.create({
 			content:content,
@@ -56,5 +50,39 @@ export default class BlogController {
 		session.flash('success',"L'element a bien été créé");
 
 		return  response.redirect().toRoute('blog.show',{slug:post_slug,id});
+	}
+
+	async edit({params,view}:HttpContext) {
+
+		const post=await Post.findByOrFail({id:params.id});
+
+		return view.render('blog/create',{post})
+	}
+
+	async update({params,session,response,request}:HttpContext) {
+
+		const post=await Post.findByOrFail({id:params.id});
+
+		const data=await request.validateUsing(updatePostValidator,{
+			meta:{id:params.id}
+		})
+
+		const {slug,id}=await post.merge(data).save();
+
+		session.flash('success',"Les modifications ont été effectué avec success");
+
+		return response.redirect().toRoute('blog.show',{slug,id})
+	}
+
+	async delete({params,session,response}:HttpContext) {
+
+		
+		const post=await Post.findByOrFail({id:params.id});
+
+		await post.delete();
+
+		session.flash('success',"Le poste a bien été supprimer");
+
+		return response.redirect().toRoute('blog.index')
 	}
 }
