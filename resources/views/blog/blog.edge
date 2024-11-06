@@ -1,4 +1,3 @@
-
 @component('blog/base')
 
     @slot('title')
@@ -41,6 +40,13 @@
                     </div>
                 @end
             </section>
+            <div>
+                @each(anchor in posts.getUrlsForRange(1, posts.lastPage))
+                  <a href="{{ anchor.url.replace('page','p1')  }}">
+                    {{ anchor.page }}
+                  </a>
+                @endeach
+              </div>
         </main>
 
     @end

@@ -1,4 +1,4 @@
-import vine from '@vinejs/vine'
+import vine,{ VineValidator } from '@vinejs/vine'
 import Post from '#models/post'
 
 export const createPostValidator = vine.compile(

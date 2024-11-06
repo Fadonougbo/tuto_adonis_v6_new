@@ -35,7 +35,9 @@ export default defineConfig({
     () => import('@adonisjs/shield/shield_provider'),
     () => import('@adonisjs/static/static_provider'),
     () => import('@adonisjs/lucid/database_provider'),
-    () => import('@adonisjs/auth/auth_provider')
+    () => import('@adonisjs/auth/auth_provider'),
+    () => import('#providers/essai_provider'),
+    () => import('@adonisjs/route-model-binding/rmb_provider')
   ],
 
   /*

@@ -1,16 +1,21 @@
 import stringHelpers from "@adonisjs/core/helpers/string";
 import type { HttpContext } from "@adonisjs/core/http";
+import { dd } from "@adonisjs/core/services/dumper";
 import Post from "#models/post";
 import { createPostValidator } from "#validators/create_post";
 import { updatePostValidator } from "#validators/update_post";
 
 export default class BlogController {
 
-	async index({ view }: HttpContext) {
+	async index({ view,request }: HttpContext) {
 
-		const posts = await Post.query().paginate(1, 30);
+		const page=request.input('p1',1);
 
-		return view.render("blog/blog", { posts });
+		const {p1,...rest}=request.qs()
+
+		const posts = (await Post.query().paginate(page, 2)).queryString(rest);
+	
+		return view.render("blog/blog",{ posts });
 	}
 
 	/**
