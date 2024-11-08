@@ -3,7 +3,7 @@
 
     @slot('title')
         <title>
-            @if(post) 
+            @if(post.id) 
                 Modifier un post
             @else
                 Creer un nouveau formulaire
@@ -16,20 +16,26 @@
         <main>
             <a href="{{route('blog.index')}}">Home</a>
 
+            <h1>
+                @if(post.id) 
+                 Modifier un post
+                @else
+                    Creer un nouveau formulaire
+                @end
+            </h1>
+
             <br>
 
-            <form action="" method="POST" >
+            @let( {title,slug,id,content}=post)
+        
+            <form action="{{post.id?`${route('blog.update',{post:id})}?_method=PATCH`:''}}" method="POST" >
 
                 {{ csrfField() }} 
-
-                @let( {title,slug,id,content}=post)
-
+        
                 <section>
                     <label for="title">Title</label>
 
                     <input type="text" name="title" id="title" value="{{old('title') || title||'title' }}" >
-
-
 
                     @inputError('title') 
                         <span>{{$messages}}</span>

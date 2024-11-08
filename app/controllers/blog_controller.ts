@@ -1,6 +1,7 @@
 import stringHelpers from "@adonisjs/core/helpers/string";
 import type { HttpContext } from "@adonisjs/core/http";
 import { dd } from "@adonisjs/core/services/dumper";
+import { bind } from "@adonisjs/route-model-binding";
 import Post from "#models/post";
 import { createPostValidator } from "#validators/create_post";
 import { updatePostValidator } from "#validators/update_post";
@@ -23,10 +24,9 @@ export default class BlogController {
 	 * @param param0 http_context
 	 * @returns 
 	 */
-	async show({params,view}:HttpContext) {
 
-		
-		const post=await Post.findByOrFail({id:params.id});
+	@bind()
+	async show({view}:HttpContext,slug:string,post:Post) {
 
         return view.render('blog/show',{post})
 	}
@@ -54,36 +54,31 @@ export default class BlogController {
 		
 		session.flash('success',"L'element a bien été créé");
 
-		return  response.redirect().toRoute('blog.show',{slug:post_slug,id});
+		return  response.redirect().toRoute('blog.show',{slug:post_slug,post:id});
 	}
 
-	async edit({params,view}:HttpContext) {
-
-		const post=await Post.findByOrFail({id:params.id});
-
+	@bind()
+	async edit({view}:HttpContext,post:Post) {
 		return view.render('blog/create',{post})
 	}
 
-	async update({params,session,response,request}:HttpContext) {
-
-		const post=await Post.findByOrFail({id:params.id});
-
+	@bind()
+	async update({params,session,response,request}:HttpContext,post:Post) {
+	
 		const data=await request.validateUsing(updatePostValidator,{
-			meta:{id:params.id}
+			meta:{id:params.post}
 		})
 
 		const {slug,id}=await post.merge(data).save();
 
 		session.flash('success',"Les modifications ont été effectué avec success");
 
-		return response.redirect().toRoute('blog.show',{slug,id})
+		return response.redirect().toRoute('blog.show',{slug,post:id})
 	}
 
-	async delete({params,session,response}:HttpContext) {
-
+	@bind()
+	async delete({session,response}:HttpContext,post:Post) {
 		
-		const post=await Post.findByOrFail({id:params.id});
-
 		await post.delete();
 
 		session.flash('success',"Le poste a bien été supprimer");
