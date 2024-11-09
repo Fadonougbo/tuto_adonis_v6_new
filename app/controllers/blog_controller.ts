@@ -2,6 +2,7 @@ import stringHelpers from "@adonisjs/core/helpers/string";
 import type { HttpContext } from "@adonisjs/core/http";
 import { dd } from "@adonisjs/core/services/dumper";
 import { bind } from "@adonisjs/route-model-binding";
+import Comment from "#models/comment";
 import Post from "#models/post";
 import { createPostValidator } from "#validators/create_post";
 import { updatePostValidator } from "#validators/update_post";
@@ -9,7 +10,7 @@ import { updatePostValidator } from "#validators/update_post";
 export default class BlogController {
 
 	async index({ view,request }: HttpContext) {
-
+		
 		const page=request.input('p1',1);
 
 		const {p1,...rest}=request.qs()
@@ -27,6 +28,29 @@ export default class BlogController {
 
 	@bind()
 	async show({view}:HttpContext,slug:string,post:Post) {
+
+		/* const posts=await Post.query().preload('comments',(commentQuery)=> {
+			
+		}).has('comments')
+		
+		const res=posts.map(p => {
+			return p.comments.length;
+		}); */
+
+		await post?.load('comments')
+
+		await post.loadCount('comments')
+
+		const c=new Comment()
+
+		c.commentaire="save com test"
+
+		//const res=await post.related('comments').save(c)
+
+		const firstCom=(await Comment.find(1))
+		await firstCom?.load('post')
+		await firstCom?.related('post').associate(post)
+		dd(firstCom?.post)
 
         return view.render('blog/show',{post})
 	}

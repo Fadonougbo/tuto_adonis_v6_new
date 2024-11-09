@@ -10,8 +10,6 @@
 import router from '@adonisjs/core/services/router'
 
 
-//router.on('/').render('pages/home').as('home')
-
 router.group(()=> {
 
     router.get('/','#controllers/blog_controller.index').as('index')

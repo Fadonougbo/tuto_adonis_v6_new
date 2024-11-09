@@ -9,7 +9,10 @@ export default class Comment extends BaseModel {
 
   @column()
   declare commentaire:string
-  
+
+  @column()
+  declare postId:number
+
   @belongsTo(()=>Post)
   declare post:BelongsTo<typeof Post>
 
