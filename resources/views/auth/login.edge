@@ -1,0 +1,45 @@
+
+@component('auth/base',{title:"Login page"})
+
+    @slot('main')
+        <h1>Se connecter</h1>
+
+        {{--@flashMessage('connection_message')
+        <ul>
+            <li>{{$message}}</li>
+        </ul>
+        @end--}}
+
+        @error('E_INVALID_CREDENTIALS') 
+        <ul>
+            <li>{{$message}}</li>
+        </ul>
+        @end
+
+        <form action="" method="POST">
+            {{csrfField()}}
+            <div>
+                <label for="email">Email</label> 
+                <input type="email" name="email" id="email" value="{{old('email')||' '}}" >
+
+                @inputError('email')
+                 <strong><mark> {{$messages}}</mark> </strong>
+                @end
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password">
+
+                @inputError('password')
+                 <strong><mark> {{$messages}}</mark> </strong>
+                @end
+            </div>
+
+            <div>
+                <button type="submit" >login now</button>
+            </div>
+        </form>
+    @end
+
+@end

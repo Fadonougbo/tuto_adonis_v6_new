@@ -5,37 +5,63 @@
     @end
 
     @slot("main")
+        @eval(x=await auth.check())
         
         <main>
+            @if(!auth.isAuthenticated)     
+            <h1>
+                <a href="{{route('auth.login')}}">LOGIN</a>
+            </h1>
+            @end
+
+            @if(auth.isAuthenticated)      
+            <form action="{{route('auth.logout')}}" method="POST">
+                {{csrfField()}}
+                <button>
+                    <strong>LOGOUT</strong>
+                </button>
+            </form>
+            @end
+
+            @if(auth.isAuthenticated)
             <h1>
                 <mark>
                     <a href="{{route('blog.create')}}">Creer un post</a>
-                    
                 </mark>
             </h1>
+            @end
             
             @flashMessage('success') 
             <h1>
                 <em>{{$message}}</em>
             </h1>
             @end
-            
+
+            @if(auth.isAuthenticated)
+            <p> Hello {{ auth.user.fullName }} </p>
+            @end
             <section>
                 @each(post in posts)
                     <div>
                         
                         @let({id,slug,title}=post)
 
-                        <h2>{{title}} <a href="{{route('blog.edit',{post:id})}}">EDITE</a> 
-
+                        <h2>
+                            {{title}} 
+                            
+                            @if(auth.isAuthenticated)   
+                            
+                            <a href="{{route('blog.edit',{post:id})}}">EDITE</a> 
+                            
                             <form action="{{route('blog.delete',{post:id})}}" method="POST">
                                 {{csrfField()}}
                                 <button type="submit" >DELETE</button>
                             </form>
                             
+                            @end
                         </h2>
 
-                        <a href="{{ route('blog.show',{slug,post:id}) }}">show</a>
+                        <a href="{{ route('blog.show',{slug,post:id}) }}">show </a>
                         
                     </div>
                 @end

@@ -1,15 +1,17 @@
 import stringHelpers from "@adonisjs/core/helpers/string";
 import type { HttpContext } from "@adonisjs/core/http";
 import { dd } from "@adonisjs/core/services/dumper";
+import hash from "@adonisjs/core/services/hash";
 import { bind } from "@adonisjs/route-model-binding";
 import Comment from "#models/comment";
 import Post from "#models/post";
+import User from "#models/user";
 import { createPostValidator } from "#validators/create_post";
 import { updatePostValidator } from "#validators/update_post";
 
 export default class BlogController {
 
-	async index({ view,request }: HttpContext) {
+	async index({ view,request,session }: HttpContext) {
 		
 		const page=request.input('p1',1);
 
@@ -28,31 +30,11 @@ export default class BlogController {
 
 	@bind()
 	async show({view}:HttpContext,slug:string,post:Post) {
-
-		/* const posts=await Post.query().preload('comments',(commentQuery)=> {
-			
-		}).has('comments')
 		
-		const res=posts.map(p => {
-			return p.comments.length;
-		}); */
-
-		await post?.load('comments')
-
-		await post.loadCount('comments')
-
-		const c=new Comment()
-
-		c.commentaire="save com test"
-
-		//const res=await post.related('comments').save(c)
-
-		const firstCom=(await Comment.find(1))
-		await firstCom?.load('post')
-		await firstCom?.related('post').associate(post)
-		dd(firstCom?.post)
+		//await User.create({fullName:"john doe",email:"doe@doe.com",password:await hash.make("demodemodemo")})
 
         return view.render('blog/show',{post})
+
 	}
 
 	/**Create new post form
