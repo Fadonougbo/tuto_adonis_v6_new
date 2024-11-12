@@ -23,7 +23,10 @@ router.group(()=> {
 
     router.get('/','#controllers/blog_controller.index').as('index')
 
+    router.post('/upload','#controllers/blog_controller.upload').as('upload')
+
     router.get('/show/:slug/:post','#controllers/blog_controller.show').where('id', /^[0-9]+$/).as('show')
+
     router.get('/create','#controllers/blog_controller.create').as('create')
 
     router.post('/create','#controllers/blog_controller.store').as('create.post')

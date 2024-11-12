@@ -1,5 +1,7 @@
+import { cuid } from "@adonisjs/core/helpers";
 import stringHelpers from "@adonisjs/core/helpers/string";
 import type { HttpContext } from "@adonisjs/core/http";
+import app from "@adonisjs/core/services/app";
 import { dd } from "@adonisjs/core/services/dumper";
 import hash from "@adonisjs/core/services/hash";
 import { bind } from "@adonisjs/route-model-binding";
@@ -10,6 +12,10 @@ import { createPostValidator } from "#validators/create_post";
 import { updatePostValidator } from "#validators/update_post";
 
 export default class BlogController {
+
+	async upload({request}:HttpContext) {
+		dd(request.file('file'))
+	}
 
 	async index({ view,request,session }: HttpContext) {
 		
@@ -74,7 +80,10 @@ export default class BlogController {
 		const data=await request.validateUsing(updatePostValidator,{
 			meta:{id:params.post}
 		})
-
+		await data?.file?.move(app.makePath('storage/uploads'),{
+			name: `${cuid()}.${data.file.extname}`
+		})
+		dd(data.file?.fileName)
 		const {slug,id}=await post.merge(data).save();
 
 		session.flash('success',"Les modifications ont été effectué avec success");
